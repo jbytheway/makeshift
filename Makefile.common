@@ -157,7 +157,9 @@ $(SUBDIR_MAKEFILES): %/Makefile: $(top_srcdir)makeshift/Makefile.common
 	@echo >> $@
 	@echo 'all:' >> $@
 	@echo >> $@
+	@echo 'include $$(top_srcdir)project.mk' >> $@
 	@echo 'include $$(top_builddir)config.mk' >> $@
+	@echo 'include $$(top_srcdir)user.mk' >> $@
 	@echo 'ifneq (,$$(wildcard Makefile.local))' >> $@
 	@echo '  this_makefile := Makefile.local' >> $@
 	@echo 'else' >> $@

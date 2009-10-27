@@ -4,11 +4,13 @@ this_srcdir =
 
 all:
 
+include project.mk
 include config.mk
+include user.mk
 include Makefile.local
 include makeshift/Makefile.common
 
-config.mk:
+config.mk user.mk:
 	touch $@
 
 #####################################################
@@ -37,7 +39,9 @@ $(BUILTIN_CONFIG_MAKEFILES): %/Makefile: $(top_srcdir)makeshift/Makefile.common
 	@echo >> $@
 	@echo 'all:' >> $@
 	@echo >> $@
+	@echo 'include $$(top_srcdir)project.mk' >> $@
 	@echo 'include $$(top_builddir)config.mk' >> $@
+	@echo 'include $$(top_srcdir)user.mk' >> $@
 	@echo 'include ../Makefile.local' >> $@
 	@echo 'include $$(top_srcdir)makeshift/Makefile.common' >> $@
 
