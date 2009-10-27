@@ -27,7 +27,8 @@ BUILTIN_CONFIG_MAKEFILES := $(addsuffix /Makefile,$(BUILTIN_CONFIGS))
 
 $(BUILTIN_CONFIG_MK_DESTS): %/config.mk: makeshift/config.mk.%
 	@mkdir -p $*
-	ln -s ../$< $*/config.mk
+	rm -f $@
+	ln -s ../$< $@
 
 $(BUILTIN_CONFIG_MAKEFILES): %/Makefile: $(top_srcdir)makeshift/Makefile.common
 	@mkdir -p $*
