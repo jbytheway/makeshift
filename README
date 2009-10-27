@@ -1,0 +1,26 @@
+Makeshift is a way to ease the build process for programs written in C or C++
+(or a mixture of the two).  It provides makefiles which, when used with GNU
+make, do most of the hard work for you in dependency analysis and compilation.
+You need only provide a few lines of code for each binary to fill in the gaps.
+
+Most usefully, you need not specify what source files are to be included in the
+compilation, the makediles will figure that out for you.
+
+Note that this is intended at an *aid to developers*; it is not a portabiltiy
+aid, and as such is no substitute for a fully-fledged build system such as the
+GNU autotools.
+
+Copyright (C) 2009  John Bytheway
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
