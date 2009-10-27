@@ -110,7 +110,7 @@ MAKEFRAGS := \
 # apply to a build or a binary respectively).
 GLOBAL_CXXFLAGS ?= -Werror -Wall -Wextra -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -O0 -ggdb
 GLOBAL_CFLAGS ?= -Werror -O0 -ggdb
-GLOBAL_CPPFLAGS ?= -std=gnu++0x -DPHOENIX_LIMIT=6
+GLOBAL_CPPFLAGS ?=
 
 # We replace '-' with '/' in the library name when using it as a directory
 # guessing e.g. libfoo-bar.la is in foo/bar
@@ -125,8 +125,7 @@ ALL_CXXFLAGS := \
 	$(CXXFLAGS) $(GLOBAL_CXXFLAGS) $(BUILD_CXXFLAGS) $(THIS_CXXFLAGS)
 ALL_CFLAGS := \
 	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(THIS_CFLAGS)
-ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(BUILD_CPPFLAGS) $(THIS_CPPFLAGS) \
-	-I$(this_srcdir) -I. -I$(top_srcdir)
+ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(BUILD_CPPFLAGS) $(THIS_CPPFLAGS)
 
 
 GAMESDIR := $(DESTDIR)$(PREFIX)/games
