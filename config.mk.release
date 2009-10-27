@@ -1,0 +1,7 @@
+# Include overall configuration
+include $(top_srcdir)config.mk
+
+# Add optimisation flags and turn off debugging info and runtime checks
+BUILD_CXXFLAGS += -O3 -g0 -DNDEBUG -fvisibility=hidden -fvisibility-inlines-hidden
+BUILD_CFLAGS += -O3 -g0 -DNDEBUG
+
