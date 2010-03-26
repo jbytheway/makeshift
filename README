@@ -1,3 +1,6 @@
+Makeshift
+=========
+
 Makeshift is a way to ease the build process for programs written in C or C++
 (or a mixture of the two).  It provides makefiles which, when used with GNU
 make, do most of the hard work for you in dependency analysis and compilation.
@@ -10,7 +13,41 @@ Note that this is intended at an *aid to developers*; it is not a portabiltiy
 aid, and as such is no substitute for a fully-fledged build system such as the
 GNU autotools.
 
-Copyright (C) 2009  John Bytheway
+Copyright (C) 2010  John Bytheway
+
+Adding makeshift to a project
+-----------------------------
+
+In a git project, add makeshift as a submodule with
+
+$ git submodule add git://github.com/jbytheway/makeshift.git
+
+(or just copy the files into your source tree)
+
+Create a toplevel Makefile by linking or copying the sample in makeshift
+
+$ ln -s makeshift/Makefile.top Makefile
+
+In each directory where you wish to build a binary or recurse to other
+directories create a Makefile.local and fill it according to the instructions
+in Makefile.common.
+
+$ vi Makefile.local
+
+(Do *not* create Makefiles except that top one above; makeshift does that for
+you.)
+
+Touch a top-level file called project.mk (will contain project-global
+settings).
+
+$ touch project.mk
+
+And you're ready to go!
+
+$ make
+
+LICENSE
+-------
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
