@@ -9,7 +9,7 @@
 # SUBDIRS - a list of subdirectories to visit recursively when dealing with the
 #   'all' or 'clean' targets.  Subdirs are built after the current dir.
 # SOURCE_DIRS - a list of directories other than the current one in which to
-# 	look for sources
+#   look for sources
 # BIN - the name of the binary to compile from all the cpp files (either a .la
 #   library file, or an executable).
 # INCLUDE - include arguments, e.g. "-I.. -Imy-headers".  Include arguments
