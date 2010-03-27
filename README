@@ -7,7 +7,7 @@ make, do most of the hard work for you in dependency analysis and compilation.
 You need only provide a few lines of code for each binary to fill in the gaps.
 
 Most usefully, you need not specify what source files are to be included in the
-compilation, the makediles will figure that out for you.
+compilation, the makefiles will figure that out for you.
 
 Note that this is intended at an *aid to developers*; it is not a portability
 aid, and as such is no substitute for a fully-fledged build system such as the
