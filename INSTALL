@@ -1,0 +1,51 @@
+This is general guidance on building a project using makeshift.  For advice on
+setting up a project to use makeshift, see README.
+
+Site-specific settings go into the top-level file user.mk.  Examples of things
+you might want to put in there:
+
+  # Use newer g++ than the default to get support for new features
+  CXX = g++-4.4.1
+  # Allow compiling against libraries I have installed in my home directory
+  BUILD_CPPFLAGS += -I$(HOME)/install/include
+  BUILD_LDFLAGS += -L$(HOME)/install/lib
+
+Variables you can set are 
+- CC for the C compiler (default: gcc)
+- CXX for the C++ compiler (default: g++)
+- LIBTOOL for libtool (default: libtool)
+- PREFIX for installation prefix (default: /usr/local)
+- DESTDIR for installation destdir (default empty)
+
+Variables you can append to are
+- BUILD_CPPFLAGS for preprocessor options,
+- BUILD_CFLAGS for C compilation,
+- BUILD_CXXFLAGS for C++ compilation, and
+- BUILD_LDFLAGS for linking.
+
+You have access to a variable $(top_srcdir) which evaluates to the directory
+containing user.mk.  This may be the empty string, and if not will contain a
+trailing slash, so you can use it like this
+
+  # Allow compiling against library in neighbouring directory
+  BUILD_CPPFLAGS += -I$(top_srcdir)../other_lib
+  BUILD_LDFLAGS += -L$(top_srcdir)../sakusen/liboptimal
+
+By default simply running 'make' will build a version with debugging
+information and no optimisation.  Makeshift supports limited out-of-directory
+builds.  For each file config.mk.foo in the makeshift directory there will be a
+target foo which creates a directory foo at top level and builds in it.  At
+present the available foo are
+- optimised (meaning -O3, but with debug information) and
+- release (meaning -O3 -g0 -DNDEBUG)
+
+Thus, running
+
+$ make release
+
+will build a release version inside a directory 'release' without affecting the
+version built with just 'make'.
+
+You can create your own configurations by imitating these existing ones, or you
+can simply add more flags to user.mk if you want to affect the default build.
+

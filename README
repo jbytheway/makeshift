@@ -9,11 +9,14 @@ You need only provide a few lines of code for each binary to fill in the gaps.
 Most usefully, you need not specify what source files are to be included in the
 compilation, the makediles will figure that out for you.
 
-Note that this is intended at an *aid to developers*; it is not a portabiltiy
+Note that this is intended at an *aid to developers*; it is not a portability
 aid, and as such is no substitute for a fully-fledged build system such as the
 GNU autotools.
 
 Copyright (C) 2010  John Bytheway
+
+If you just want to build a project using makeshift, see INSTALL.  If you want
+to use it in your own projects, see below.
 
 Adding makeshift to a project
 -----------------------------
