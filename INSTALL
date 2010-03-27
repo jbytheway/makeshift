@@ -29,7 +29,7 @@ trailing slash, so you can use it like this
 
   # Allow compiling against library in neighbouring directory
   BUILD_CPPFLAGS += -I$(top_srcdir)../other_lib
-  BUILD_LDFLAGS += -L$(top_srcdir)../sakusen/liboptimal
+  BUILD_LDFLAGS += -L$(top_srcdir)../other_lib
 
 By default simply running 'make' will build a version with debugging
 information and no optimisation.  Makeshift supports limited out-of-directory
@@ -37,7 +37,8 @@ builds.  For each file config.mk.foo in the makeshift directory there will be a
 target foo which creates a directory foo at top level and builds in it.  At
 present the available foo are
 - optimised (meaning -O3, but with debug information) and
-- release (meaning -O3 -g0 -DNDEBUG)
+- release (meaning -O3 -g0 -DNDEBUG -fvisibility=hidden
+  -fvisibility-inlines-hidden)
 
 Thus, running
 
