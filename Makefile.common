@@ -126,6 +126,7 @@ ALL_CXXFLAGS := \
 ALL_CFLAGS := \
 	$(CFLAGS) $(GLOBAL_CFLAGS) $(BUILD_CFLAGS) $(THIS_CFLAGS)
 ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(BUILD_CPPFLAGS) $(THIS_CPPFLAGS)
+ALL_LIBTOOLFLAGS := $(BUILD_LIBTOOLFLAGS) $(THIS_LIBTOOLFLAGS)
 
 
 GAMESDIR := $(DESTDIR)$(PREFIX)/games
@@ -237,7 +238,8 @@ ifneq ($(IS_LIB),)
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) $(this_makefile)
-	$(LIBTOOL) --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
+		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-rpath $(PREFIX)/lib$(INSTALL_SUBDIR) \
 		-o $@ $(LIBS) $(LIBTOOL_OBJS) $(LIB_DEP)
 
@@ -250,18 +252,21 @@ $(LIBTOOL_OBJS): %.lo: %.o
 
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c \
+	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=compile \
+		$(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
 
 $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
-	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
+	$(LIBTOOL) --tag=CC $(ALL_LIBTOOLFLAGS) --mode=compile $(CC) \
+		$(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
 		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
 
 # install the lib
 install-nonrecursive: $(BIN)
 	install -d $(LIBDIR)$(INSTALL_SUBDIR)
-	$(LIBTOOL) --mode=install install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+	$(LIBTOOL) $(ALL_LIBTOOLFLAGS) --mode=install \
+		install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 
 else
 # When it is an executable
@@ -269,7 +274,8 @@ else
 # Build the binary
 
 $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) $(this_makefile)
-	$(LIBTOOL) --mode=link --tag=CXX $(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
+	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=link \
+		$(CXX) -g3 $(BUILD_LDFLAGS) $(THIS_LDFLAGS) \
 		-o $@ $(LIBS) $(CXX_OBJS) $(C_OBJS) $(LIB_DEP)
 
 # The actual compile commands (source dependencies will come from the makefrag
@@ -290,7 +296,8 @@ $(C_OBJS): .obj/%.o:
 ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
 install-nonrecursive: $(BIN)
 	install -d $(GAMESDIR)$(INSTALL_SUBDIR)
-	$(LIBTOOL) --mode=install install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+	$(LIBTOOL) $(ALL_LIBTOOLFLAGS) --mode=install \
+		install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 endif
 
 endif
