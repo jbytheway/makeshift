@@ -49,3 +49,5 @@ $(BUILTIN_CONFIG_MAKEFILES): %/Makefile: $(top_srcdir)makeshift/Makefile.common
 $(BUILTIN_CONFIGS): %: %/Makefile %/config.mk
 	$(MAKE) -C $* all
 
+.PHONY: $(BUILTIN_CONFIGS)
+
