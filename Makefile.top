@@ -1,13 +1,14 @@
 top_srcdir =
 top_builddir =
 this_srcdir =
+this_makefile = Makefile.local
 
 all:
 
 include project.mk
 include config.mk
 include user.mk
-include Makefile.local
+include $(this_makefile)
 include makeshift/Makefile.common
 
 config.mk user.mk:
