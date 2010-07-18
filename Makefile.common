@@ -40,6 +40,8 @@
 # NO_AUTO_COMPILING - if set to yes, will entirely disable all the cleverness
 #   in this file to do with C and C++, but does not affect the support for more
 #   general targets like all, clean, etc.
+# GEN_SOURCES - A list of source files which need to be generated.  You must
+#   also supply rules in your makefile for generating them.
 #
 # If you wish to add your own targets which are built along with everything
 # else, then make them dependencies or rules of all-nonrecursive.  They will
@@ -80,19 +82,23 @@ ifeq ($(NO_AUTO_COMPILING),yes)
 CXX_SOURCES :=
 C_SOURCES :=
 else
-CXX_SOURCES := $(filter-out $(foreach exc,$(EXCLUDE_FILES),$(this_srcdir)$(exc)),\
-	$(wildcard $(this_srcdir)*.cpp) \
-	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.cpp)))
-C_SOURCES := $(filter-out $(foreach exc,$(EXCLUDE_FILES),$(this_srcdir)$(exc)),\
-	$(wildcard $(this_srcdir)*.c) \
-	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.c)))
+CXX_SOURCES := \
+	$(filter-out $(foreach exc,$(EXCLUDE_FILES),$(this_srcdir)$(exc)), \
+		$(wildcard $(this_srcdir)*.cpp) \
+		$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.cpp))) \
+	$(filter %.cpp,$(GEN_SOURCES))
+C_SOURCES := \
+	$(filter-out $(foreach exc,$(EXCLUDE_FILES),$(this_srcdir)$(exc)), \
+		$(wildcard $(this_srcdir)*.c) \
+		$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.c))) \
+	$(filter %.c,$(GEN_SOURCES))
 endif
 
 # Note that though the *_SOURCES variables point at the source directory tree,
 # the *_BASES variables have $(this_srcdir) stripped off the front, and are
-# thus local.
-CXX_BASES := $(patsubst $(this_srcdir)%,%,$(basename $(CXX_SOURCES)))
-C_BASES := $(patsubst $(this_srcdir)%,%,$(basename $(C_SOURCES)))
+# thus local.  We also dedupe at this point (dupes can arise from GEN_SOURCES)
+CXX_BASES := $(sort $(patsubst $(this_srcdir)%,%,$(basename $(CXX_SOURCES))))
+C_BASES := $(sort $(patsubst $(this_srcdir)%,%,$(basename $(C_SOURCES))))
 # When generating the object an makefrag file names, we need to be sure to
 # remove '..' from the path in order to prevent random directories being
 # created anywhere and everywhere
@@ -102,8 +108,18 @@ CXX_LIBTOOL_OBJS := $(foreach obj,$(CXX_OBJS),$(basename $(obj)).lo)
 C_LIBTOOL_OBJS := $(foreach obj,$(C_OBJS),$(basename $(obj)).lo)
 LIBTOOL_OBJS := $(CXX_LIBTOOL_OBJS) $(C_LIBTOOL_OBJS)
 MAKEFRAGS := \
-	$(foreach source,$(patsubst $(this_srcdir)%,%,$(CXX_SOURCES) $(C_SOURCES)),\
-		.makefrags/$(subst ..,_dot_dot,$(source)).makefrag\
+	$(sort \
+		$(foreach source,$(patsubst $(this_srcdir)%,%,$(CXX_SOURCES) $(C_SOURCES)),\
+			.makefrags/$(subst ..,_dot_dot,$(source)).makefrag\
+		) \
+	)
+
+# This function converts a source file name without a redirection to
+# $(this_srcdir) into one that does or not, as appropriate
+MAKE_SOURCE = \
+	$(if $(filter $(1),$(GEN_SOURCES)), \
+		$(1), \
+		$(this_srcdir)$(subst _dot_dot,..,$(1)) \
 	)
 
 # Add warnings and debugging, and turn off optimizations.  To get optimizations
@@ -254,13 +270,13 @@ $(CXX_LIBTOOL_OBJS): .obj/%.lo:
 	@mkdir -p $(dir $@)
 	$(LIBTOOL) --tag=CXX $(ALL_LIBTOOLFLAGS) --mode=compile \
 		$(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c \
-		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
+		-o $@ $(call MAKE_SOURCE,$*.cpp)
 
 $(C_LIBTOOL_OBJS): .obj/%.lo:
 	@mkdir -p $(dir $@)
 	$(LIBTOOL) --tag=CC $(ALL_LIBTOOLFLAGS) --mode=compile $(CC) \
 		$(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
-		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
+		-o $@ $(call MAKE_SOURCE,$*.c)
 
 # install the lib
 install-nonrecursive: $(BIN)
@@ -287,12 +303,12 @@ $(BIN): $(CXX_OBJS) $(C_OBJS) $(LIB_DEP) $(this_makefile)
 $(CXX_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	$(CXX) $(ALL_CPPFLAGS) $(ALL_CXXFLAGS) -c \
-		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).cpp
+		-o $@ $(call MAKE_SOURCE,$*.cpp)
 
 $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	$(CC) $(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
-		-o $@ $(this_srcdir)$(subst _dot_dot,..,$*).c
+		-o $@ $(call MAKE_SOURCE,$*.c)
 
 # install the binary unless it was linked with -no-install
 ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
@@ -329,11 +345,11 @@ include $(MAKEFRAGS)
 endif
 endif
 
-$(MAKEFRAGS): .makefrags/%.makefrag:
+$(MAKEFRAGS): .makefrags/%.makefrag: $(GEN_SOURCES)
 	@mkdir -p $(dir $@)
 	cpp $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) -MT $@ \
-		-MP -M -MF $@  $(this_srcdir)$(subst _dot_dot,..,$*)
-	printf "\n%s:\n" "$(this_srcdir)$(subst _dot_dot,..,$*)" >> $@
+		-MP -M -MF $@  $(call MAKE_SOURCE,$*)
+	printf "\n%s:\n" "$(call MAKE_SOURCE,$*)" >> $@
 
 #####################################################
 #
