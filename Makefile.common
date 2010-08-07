@@ -278,6 +278,10 @@ $(C_LIBTOOL_OBJS): .obj/%.lo:
 		$(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
 		-o $@ $(call MAKE_SOURCE,$*.c)
 
+$(CXX_LIBTOOL_OBJS) $(C_LIBTOOL_OBJS): \
+	$(top_srcdir)user.mk $(top_srcdir)project.mk \
+	$(top_srcdir)config.mk $(top_builddir) config.mk
+
 # install the lib
 install-nonrecursive: $(BIN)
 	install -d $(LIBDIR)$(INSTALL_SUBDIR)
@@ -309,6 +313,10 @@ $(C_OBJS): .obj/%.o:
 	@mkdir -p $(dir $@)
 	$(CC) $(ALL_CPPFLAGS) $(ALL_CFLAGS) -c \
 		-o $@ $(call MAKE_SOURCE,$*.c)
+
+$(CXX_OBJS) $(C_OBJS): \
+	$(top_srcdir)user.mk $(top_srcdir)project.mk \
+	$(top_srcdir)config.mk $(top_builddir) config.mk
 
 # install the binary unless it was linked with -no-install
 ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
