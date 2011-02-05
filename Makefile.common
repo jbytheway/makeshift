@@ -62,6 +62,7 @@
 
 CXX ?= g++
 CC ?= gcc
+CPP ?= cpp
 LIBTOOL ?= libtool
 
 PREFIX ?= /usr/local
@@ -349,8 +350,8 @@ endif
 
 $(MAKEFRAGS): .makefrags/%.makefrag: $(GEN_SOURCES)
 	@mkdir -p $(dir $@)
-	cpp $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) -MT $@ \
-		-MP -M -MF $@  $(call MAKE_SOURCE,$*)
+	$(CPP) $(ALL_CPPFLAGS) -MT .obj/$(basename $*).$(MAKEFRAG_DEP_EXTENSION) \
+		-MT $@ -MP -M -o $@  $(call MAKE_SOURCE,$*)
 	printf "\n%s:\n" "$(call MAKE_SOURCE,$*)" >> $@
 
 .PHONY: \
