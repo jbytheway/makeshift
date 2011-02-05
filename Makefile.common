@@ -6,6 +6,9 @@
 # action to be a recursive build.
 #
 # The variables you can define are as follows.  Omit irrelevant ones.
+# CC - C compiler (default gcc).
+# CXX - C++ compiler (default g++).
+# CPP - C preprocessor (default cpp).
 # SUBDIRS - a list of subdirectories to visit recursively when dealing with the
 #   'all' or 'clean' targets.  Subdirs are built after the current dir.
 # SOURCE_DIRS - a list of directories other than the current one in which to
