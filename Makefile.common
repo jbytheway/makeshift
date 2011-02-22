@@ -151,7 +151,6 @@ ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(BUILD_CPPFLAGS) $(THIS_CPPFLAGS)
 ALL_LIBTOOLFLAGS := $(BUILD_LIBTOOLFLAGS) $(THIS_LIBTOOLFLAGS)
 
 
-GAMESDIR := $(DESTDIR)$(PREFIX)/games
 BINDIR := $(DESTDIR)$(PREFIX)/bin
 LIBDIR := $(DESTDIR)$(PREFIX)/lib
 MANDIR := $(DESTDIR)$(PREFIX)/man
@@ -326,9 +325,9 @@ $(CXX_OBJS) $(C_OBJS): \
 # install the binary unless it was linked with -no-install
 ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
 install-nonrecursive: $(BIN)
-	install -d $(GAMESDIR)$(INSTALL_SUBDIR)
+	install -d $(BINDIR)$(INSTALL_SUBDIR)
 	$(LIBTOOL) $(ALL_LIBTOOLFLAGS) --mode=install \
-		install -m 755 $< $(GAMESDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+		install -m 755 $< $(BINDIR)$(INSTALL_SUBDIR)/$(notdir $<)
 endif
 
 MAKEFRAG_DEP_EXTENSION := o
