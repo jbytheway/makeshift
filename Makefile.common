@@ -155,6 +155,7 @@ GAMESDIR := $(DESTDIR)$(PREFIX)/games
 BINDIR := $(DESTDIR)$(PREFIX)/bin
 LIBDIR := $(DESTDIR)$(PREFIX)/lib
 MANDIR := $(DESTDIR)$(PREFIX)/man
+INCDIR := $(DESTDIR)$(PREFIX)/include
 
 #####################################################
 #
@@ -337,6 +338,30 @@ else # $(BIN) is empty
 install-nonrecursive:
 
 endif # $(BIN) non-empty
+
+#####################################################
+#
+# Install headers
+#
+#####################################################
+
+ifeq ($(INSTALL_HEADERS),yes)
+
+VARIOUS_HEADERS := \
+	$(wildcard $(this_srcdir)*.hpp) \
+	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.hpp))
+
+VARIOUS_HEADERS_INSTALLED := \
+	$(patsubst $(this_srcdir)%,$(INCDIR)$(INSTALL_SUBDIR)/%,$(VARIOUS_HEADERS))
+
+install-nonrecursive: $(VARIOUS_HEADERS_INSTALLED)
+
+$(VARIOUS_HEADERS_INSTALLED): $(INCDIR)$(INSTALL_SUBDIR)/%: $(this_srcdir)%
+	install -m 755 -d $(dir $@)
+	install -m 644 $< $@
+
+endif
+
 #####################################################
 #
 #  Dependency generation
