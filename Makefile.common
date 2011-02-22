@@ -192,7 +192,7 @@ $(SUBDIR_MAKEFILES): %/Makefile: $(top_srcdir)makeshift/Makefile.common
 
 remove-empty-subdirs:
 	-rm -f $(SUBDIR_MAKEFILES)
-	-rmdir --ignore-fail-on-non-empty $(SUBDIRS)
+	-rmdir $(SUBDIRS)
 
 endif
 
