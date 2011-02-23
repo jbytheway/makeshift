@@ -40,7 +40,12 @@
 #   DESTDIR=debian/build and INSTALL_SUBDIR=foo then libraries will be linked
 #   as if to be installed into /usr/local/lib/foo/ and 'make install' will put
 #   the libraries in debian/build/usr/local/lib/foo.
-# NO_AUTO_COMPILING - if set to yes, will entirely disable all the cleverness
+# INSTALL_HEADERS - If set to yes, will cause all .hpp files in this dir and
+#   SUBDIRS to be installed when 'make install' run, to a corresponding subdir
+#   of $(PREFIX)/include/$(INCLUDE_SUBDIR).
+# INSTALL_SHARE - A list of files to be installed into
+#   $(PREFIX)/share/$(INCLUDE_SUBDIR).
+# NO_AUTO_COMPILING - If set to yes, will entirely disable all the cleverness
 #   in this file to do with C and C++, but does not affect the support for more
 #   general targets like all, clean, etc.
 # GEN_SOURCES - A list of source files which need to be generated.  You must
