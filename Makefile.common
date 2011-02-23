@@ -154,6 +154,7 @@ ALL_LIBTOOLFLAGS := $(BUILD_LIBTOOLFLAGS) $(THIS_LIBTOOLFLAGS)
 BINDIR := $(DESTDIR)$(PREFIX)/bin$(INSTALL_SUBDIR)
 LIBDIR := $(DESTDIR)$(PREFIX)/lib$(INSTALL_SUBDIR)
 INCDIR := $(DESTDIR)$(PREFIX)/include$(INSTALL_SUBDIR)
+SHAREDIR := $(DESTDIR)$(PREFIX)/share$(INSTALL_SUBDIR)
 
 #####################################################
 #
@@ -359,6 +360,14 @@ $(VARIOUS_HEADERS_INSTALLED): $(INCDIR)/%: $(this_srcdir)%
 	install -m 644 $< $@
 
 endif
+
+INSTALL_SHARE_INSTALLED := $(addprefix $(SHAREDIR)/,$(INSTALL_SHARE))
+
+install-nonrecursive: $(INSTALL_SHARE_INSTALLED)
+
+$(INSTALL_SHARE_INSTALLED): $(SHAREDIR)/%: %
+	install -m 755 -d $(dir $@)
+	install -m 644 $< $@
 
 #####################################################
 #
