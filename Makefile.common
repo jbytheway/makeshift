@@ -151,10 +151,9 @@ ALL_CPPFLAGS := $(GLOBAL_CPPFLAGS) $(BUILD_CPPFLAGS) $(THIS_CPPFLAGS)
 ALL_LIBTOOLFLAGS := $(BUILD_LIBTOOLFLAGS) $(THIS_LIBTOOLFLAGS)
 
 
-BINDIR := $(DESTDIR)$(PREFIX)/bin
-LIBDIR := $(DESTDIR)$(PREFIX)/lib
-MANDIR := $(DESTDIR)$(PREFIX)/man
-INCDIR := $(DESTDIR)$(PREFIX)/include
+BINDIR := $(DESTDIR)$(PREFIX)/bin$(INSTALL_SUBDIR)
+LIBDIR := $(DESTDIR)$(PREFIX)/lib$(INSTALL_SUBDIR)
+INCDIR := $(DESTDIR)$(PREFIX)/include$(INSTALL_SUBDIR)
 
 #####################################################
 #
@@ -288,9 +287,9 @@ $(CXX_LIBTOOL_OBJS) $(C_LIBTOOL_OBJS): \
 
 # install the lib
 install-nonrecursive: $(BIN)
-	install -d $(LIBDIR)$(INSTALL_SUBDIR)
+	install -d $(LIBDIR)
 	$(LIBTOOL) $(ALL_LIBTOOLFLAGS) --mode=install \
-		install -m 644 $< $(LIBDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+		install -m 644 $< $(LIBDIR)/$(notdir $<)
 
 MAKEFRAG_DEP_EXTENSION := lo
 
@@ -325,9 +324,9 @@ $(CXX_OBJS) $(C_OBJS): \
 # install the binary unless it was linked with -no-install
 ifeq (,$(filter -no-install,$(THIS_LDFLAGS)))
 install-nonrecursive: $(BIN)
-	install -d $(BINDIR)$(INSTALL_SUBDIR)
+	install -d $(BINDIR)
 	$(LIBTOOL) $(ALL_LIBTOOLFLAGS) --mode=install \
-		install -m 755 $< $(BINDIR)$(INSTALL_SUBDIR)/$(notdir $<)
+		install -m 755 $< $(BINDIR)/$(notdir $<)
 endif
 
 MAKEFRAG_DEP_EXTENSION := o
@@ -351,11 +350,11 @@ VARIOUS_HEADERS := \
 	$(foreach dir,$(SOURCE_DIRS),$(wildcard $(this_srcdir)$(dir)/*.hpp))
 
 VARIOUS_HEADERS_INSTALLED := \
-	$(patsubst $(this_srcdir)%,$(INCDIR)$(INSTALL_SUBDIR)/%,$(VARIOUS_HEADERS))
+	$(patsubst $(this_srcdir)%,$(INCDIR)/%,$(VARIOUS_HEADERS))
 
 install-nonrecursive: $(VARIOUS_HEADERS_INSTALLED)
 
-$(VARIOUS_HEADERS_INSTALLED): $(INCDIR)$(INSTALL_SUBDIR)/%: $(this_srcdir)%
+$(VARIOUS_HEADERS_INSTALLED): $(INCDIR)/%: $(this_srcdir)%
 	install -m 755 -d $(dir $@)
 	install -m 644 $< $@
 
