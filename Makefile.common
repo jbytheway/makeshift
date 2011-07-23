@@ -70,7 +70,7 @@
 
 CXX ?= g++
 CC ?= gcc
-CPP ?= cpp
+CPP = $(CXX) -E
 LIBTOOL ?= libtool
 
 PREFIX ?= /usr/local
